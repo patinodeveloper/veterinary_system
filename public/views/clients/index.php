@@ -14,19 +14,19 @@ include __DIR__ . '/../partials/sidebar.php';
         <div class="container mx-auto px-4 py-6">
             <div class="flex justify-between items-center mb-6">
                 <h1 class="text-2xl font-bold">Clientes</h1>
-                <a href="/clients/create" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
-                    Nuevo Cliente
+                <a href="/clients/create" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center">
+                    <i class="fas fa-plus-circle mr-2"></i> Nuevo Cliente
                 </a>
             </div>
 
-            <!-- Buscador -->
+            <!-- Searchbar -->
             <form action="/clients/search" method="GET" class="mb-6">
                 <div class="flex">
                     <input type="text" name="q" placeholder="Buscar clientes..."
                         class="flex-1 px-4 py-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-r">
-                        Buscar
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-r flex items-center">
+                        <i class="fas fa-search mr-2"></i> Buscar
                     </button>
                 </div>
             </form>
@@ -61,12 +61,21 @@ include __DIR__ . '/../partials/sidebar.php';
                                     <?= htmlspecialchars($client->getAddress()) ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="/clients/<?= $client->getId() ?>" class="text-blue-600 hover:text-blue-900 mr-3">Ver</a>
-                                    <a href="/clients/<?= $client->getId() ?>/edit" class="text-green-600 hover:text-green-900 mr-3">Editar</a>
-                                    <form action="/clients/<?= $client->getId() ?>" method="POST" class="inline">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('¿Eliminar este cliente?')">Eliminar</button>
-                                    </form>
+                                    <div class="flex space-x-3">
+                                        <a href="/clients/<?= $client->getId() ?>" class="text-blue-600 hover:text-blue-900" title="Ver">
+                                            <i class="fas fa-eye text-base"></i>
+                                        </a>
+                                        <a href="/clients/<?= $client->getId() ?>/edit" class="text-green-600 hover:text-green-900" title="Editar">
+                                            <i class="fas fa-edit text-base"></i>
+                                        </a>
+                                        <form action="/clients/<?= $client->getId() ?>/delete" method="POST" class="inline">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="text-red-600 hover:text-red-900" title="Eliminar"
+                                                onclick="return confirm('¿Eliminar este cliente?')">
+                                                <i class="fas fa-trash-alt text-base"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

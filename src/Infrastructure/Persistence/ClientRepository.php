@@ -35,8 +35,7 @@ class ClientRepository implements ClientRepositoryInterface
     {
         $offset = ($page - 1) * $perPage;
         $stmt = $this->connection->prepare(
-            "SELECT * FROM clients 
-             ORDER BY lastName, firstName
+            "SELECT * FROM clients
              LIMIT :limit OFFSET :offset"
         );
 

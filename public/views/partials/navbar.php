@@ -14,7 +14,7 @@
             </div>
 
             <div class="flex items-center">
-                <span class="mr-4 hidden md:block"><?= htmlspecialchars($user['name']) ?></span>
+                <span class="mr-4 hidden md:block"><?= htmlspecialchars($user['firstName']) ?></span>
                 <div class="relative">
                     <button id="userMenuButton" class="flex items-center text-gray-600 hover:text-gray-800 focus:outline-none">
                         <i class="fas fa-user-circle text-2xl"></i>
