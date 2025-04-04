@@ -1,6 +1,6 @@
 <?php
-$title = 'Clientes - Veterinaria';
-$pageTitle = 'Clientes';
+$title = 'Mascotas - Veterinaria';
+$pageTitle = 'Mascotas';
 include __DIR__ . '/../partials/header.php';
 include __DIR__ . '/../partials/sidebar.php';
 ?>
@@ -12,17 +12,14 @@ include __DIR__ . '/../partials/sidebar.php';
     <!-- Contenido principal -->
     <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
         <div class="container mx-auto px-4 py-6">
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold">Clientes</h1>
-                <a href="/clients/create" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center">
-                    <i class="fas fa-plus-circle mr-2"></i> Nuevo Cliente
-                </a>
+            <div class="mb-6">
+                <h1 class="text-2xl font-bold">Mascotas</h1>
             </div>
 
             <!-- Searchbar -->
-            <form action="/clients/search" method="GET" class="mb-6">
+            <form action="/pets/search" method="GET" class="mb-6">
                 <div class="flex">
-                    <input type="text" name="q" placeholder="Buscar clientes..."
+                    <input type="text" name="q" placeholder="Buscar mascotas..."
                         class="flex-1 px-4 py-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-r flex items-center">
@@ -31,51 +28,60 @@ include __DIR__ . '/../partials/sidebar.php';
                 </div>
             </form>
 
-            <!-- Lista de clientes -->
+            <!-- Lista de mascotas -->
             <div class="bg-white shadow rounded-lg overflow-hidden">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dirección</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Especie</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Raza</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dueño</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <?php foreach ($clients as $client): ?>
+                        <?php foreach ($pets as $pet): ?>
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <?php $petIcon = $pet->getSpecies() === 'Perro' ? 'fa-dog' : ($pet->getSpecies() === 'Gato' ? 'fa-cat' : 'fa-paw'); ?>
+                                            <i class="fas <?= $petIcon ?> text-gray-400 text-xl"></i>
+                                        </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900">
-                                                <?= htmlspecialchars($client->getFirstName() . ' ' . $client->getLastName()) ?>
+                                                <?= htmlspecialchars($pet->getName()) ?>
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                <?= htmlspecialchars($pet->getGender()) ?> - <?= htmlspecialchars($pet->getLifeStage()) ?>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?= htmlspecialchars($client->getPhone()) ?>
+                                    <?= htmlspecialchars($pet->getSpecies()) ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?= htmlspecialchars($client->getAddress()) ?>
+                                    <?= htmlspecialchars($pet->getBreed()) ?>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <a href="/clients/<?= $pet->getClientId() ?>" class="text-blue-600 hover:text-blue-900">
+                                        Ver dueño
+                                    </a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-3">
-                                        <a href="/clients/<?= $client->getId() ?>" class="text-blue-600 hover:text-blue-900" title="Ver">
+                                        <a href="/pets/<?= $pet->getId() ?>" class="text-blue-600 hover:text-blue-900" title="Ver">
                                             <i class="fas fa-eye text-base"></i>
                                         </a>
-                                        <a href="/clients/<?= $client->getId() ?>/edit" class="text-green-600 hover:text-green-900" title="Editar">
+                                        <a href="/pets/<?= $pet->getId() ?>/edit" class="text-green-600 hover:text-green-900" title="Editar">
                                             <i class="fas fa-edit text-base"></i>
                                         </a>
-                                        <a href="/pets/create?client_id=<?= $client->getId() ?>" class="text-purple-600 hover:text-purple-900"
-                                            title="Agregar mascota">
-                                            <i class="fas fa-paw text-base"></i>
-                                        </a>
-                                        <form action="/clients/<?= $client->getId() ?>/delete" method="POST" class="inline">
+                                        <form action="/pets/<?= $pet->getId() ?>/delete" method="POST" class="inline">
                                             <input type="hidden" name="_method" value="DELETE">
                                             <button type="submit" class="text-red-600 hover:text-red-900" title="Eliminar"
-                                                onclick="return confirm('¿Eliminar este cliente?')">
+                                                onclick="return confirm('¿Eliminar esta mascota?')">
                                                 <i class="fas fa-trash-alt text-base"></i>
                                             </button>
                                         </form>

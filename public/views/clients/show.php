@@ -3,7 +3,7 @@ $title = 'Detalle de Cliente - Veterinaria';
 $pageTitle = 'Detalle de Cliente';
 include __DIR__ . '/../partials/header.php';
 include __DIR__ . '/../partials/sidebar.php';
-$pets = []; // remover prox
+// $pets = []; // remover prox
 $appointments = []; // remover prox
 ?>
 
@@ -46,24 +46,63 @@ $appointments = []; // remover prox
                                 </p>
                             </div>
 
-                            <div>
-                                <h2 class="text-lg font-semibold text-gray-700 mb-2">Mascotas</h2>
+                            <!-- Sección de Mascotas Mejorada -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h2 class="text-lg font-semibold text-gray-700">
+                                        <i class="fas fa-paw mr-1"></i> Mascotas (<?= count($pets) ?>)
+                                    </h2>
+                                    <a href="/pets/create?client_id=<?= $client->getId() ?>"
+                                        class="text-sm bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded flex items-center">
+                                        <i class="fas fa-plus-circle mr-1"></i> Nueva
+                                    </a>
+                                </div>
+
                                 <?php if (count($pets) > 0): ?>
-                                    <ul class="space-y-2">
+                                    <div class="space-y-3">
                                         <?php foreach ($pets as $pet): ?>
-                                            <li>
-                                                <a href="/pets/<?= $pet->getId() ?>" class="text-blue-600 hover:text-blue-800">
-                                                    <?= htmlspecialchars($pet->getName()) ?> (<?= htmlspecialchars($pet->getSpecies()) ?>)
-                                                </a>
-                                            </li>
+                                            <div class="bg-white p-3 rounded-md shadow-sm hover:shadow-md transition-shadow">
+                                                <div class="flex justify-between items-start">
+                                                    <div>
+                                                        <a href="/pets/<?= $pet->getId() ?>" class="font-medium text-blue-600 hover:text-blue-800 flex items-center">
+                                                            <?php
+                                                            $icon = match ($pet->getSpecies()) {
+                                                                'Perro' => 'fa-dog',
+                                                                'Gato' => 'fa-cat',
+                                                                default => 'fa-paw'
+                                                            };
+                                                            ?>
+                                                            <i class="fas <?= $icon ?> mr-2 text-gray-400"></i>
+                                                            <?= htmlspecialchars($pet->getName()) . ' - ' . htmlspecialchars($pet->getSpecies()) ?>
+                                                        </a>
+                                                        <div class="text-sm text-gray-600 mt-1">
+                                                            <span class="inline-block bg-gray-100 rounded-full px-2 py-0.5 mr-2">
+                                                                <?= htmlspecialchars($pet->getBreed()) ?>
+                                                            </span>
+                                                            <span class="inline-block bg-gray-100 rounded-full px-2 py-0.5">
+                                                                <?= htmlspecialchars($pet->getLifeStage()) ?>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <a href="/pets/<?= $pet->getId() ?>/edit"
+                                                        class="text-gray-400 hover:text-gray-600 ml-2"
+                                                        title="Editar mascota">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         <?php endforeach; ?>
-                                    </ul>
+                                    </div>
                                 <?php else: ?>
-                                    <p class="text-gray-500">Este cliente no tiene mascotas registradas.</p>
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-paw text-gray-300 text-4xl mb-2"></i>
+                                        <p class="text-gray-500">No hay mascotas registradas</p>
+                                        <a href="/pets/create?client_id=<?= $client->getId() ?>"
+                                            class="inline-block mt-2 text-blue-500 hover:text-blue-700 text-sm">
+                                            Agregar primera mascota
+                                        </a>
+                                    </div>
                                 <?php endif; ?>
-                                <a href="/pets/create?client_id=<?= $client->getId() ?>" class="inline-block mt-3 text-sm text-blue-600 hover:text-blue-800 flex items-center">
-                                    <i class="fas fa-plus-circle mr-1"></i> Agregar mascota
-                                </a>
                             </div>
                         </div>
                     </div>

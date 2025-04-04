@@ -58,7 +58,7 @@ include __DIR__ . '/partials/sidebar.php';
                 <div class="mt-8">
                     <h2 class="text-xl font-semibold mb-4">Actividad</h2>
                     <div class="bg-gray-50 rounded-lg p-4">
-                        <p class="text-gray-600">contenido principal</p>
+                        <p class="text-gray-600">Contenido principal en desarrollo</p>
                     </div>
                 </div>
             </div>

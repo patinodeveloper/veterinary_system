@@ -3,14 +3,17 @@
 namespace VetApp\Interfaces\Http\Controllers;
 
 use VetApp\Application\Client\ManageClientUseCase;
+use VetApp\Application\Pet\ManagePetUseCase;
 
 class ClientController
 {
     private ManageClientUseCase $clientUseCase;
+    private ManagePetUseCase $petUseCase;
 
-    public function __construct(ManageClientUseCase $clientUseCase)
+    public function __construct(ManageClientUseCase $clientUseCase, ManagePetUseCase $petUseCase)
     {
         $this->clientUseCase = $clientUseCase;
+        $this->petUseCase = $petUseCase;
     }
 
     public function index()
@@ -35,6 +38,11 @@ class ClientController
             echo "Cliente no encontrado";
             return;
         }
+
+        // Obtener las mascotas del cliente
+        $petsData = $this->petUseCase->getPetsByClient($client->getId());
+        $pets = $petsData['pets'];
+        
         include __DIR__ . '/../../../../public/views/clients/show.php';
     }
 

@@ -4,25 +4,14 @@ namespace VetApp\Domain\Entities;
 
 class Client
 {
-    private int $id;
-    private string $firstName;
-    private string $lastName;
-    private string $phone;
-    private string $address;
 
     public function __construct(
-        int $id,
-        string $firstName,
-        string $lastName,
-        string $phone,
-        string $address
-    ) {
-        $this->id = $id;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->phone = $phone;
-        $this->address = $address;
-    }
+        private int $id,
+        private string $firstName,
+        private string $lastName,
+        private string $phone,
+        private string $address
+    ) {}
 
     // Getters
     public function getId(): int
