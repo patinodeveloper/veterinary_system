@@ -14,4 +14,5 @@ interface ClientRepositoryInterface
     public function delete(int $id): bool;
     public function search(string $query, int $page = 1, int $perPage = 10): array;
     public function countSearch(string $query): int;
+    public function findByPetId(int $id) : ?Client;
 }

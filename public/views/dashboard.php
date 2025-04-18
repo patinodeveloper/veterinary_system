@@ -54,7 +54,7 @@ include __DIR__ . '/partials/sidebar.php';
                     </div>
                 </div>
 
-                <!-- Sección adicional -->
+                <!-- Sección adicional (pendiente) -->
                 <div class="mt-8">
                     <h2 class="text-xl font-semibold mb-4">Actividad</h2>
                     <div class="bg-gray-50 rounded-lg p-4">
@@ -66,6 +66,7 @@ include __DIR__ . '/partials/sidebar.php';
     </main>
 </div>
 
+<script src="/js/global/scripts.js"></script>
+
 <?php
-include __DIR__ . '/partials/scripts.php';
 include __DIR__ . '/partials/footer.php';

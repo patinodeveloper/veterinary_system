@@ -18,17 +18,23 @@ class PetRepository implements PetRepositoryInterface
 
     public function find(int $id): ?Pet
     {
-        $stmt = $this->connection->prepare("SELECT * FROM pets WHERE id = :id");
+        $stmt = $this->connection->prepare(
+            "SELECT p.*, s.name as species_name, b.name as breed_name 
+             FROM pets p
+             JOIN species s ON p.species_id = s.id
+             LEFT JOIN breeds b ON p.breed_id = b.id
+             WHERE p.id = :id"
+        );
         $stmt->execute([':id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $data ? new Pet(
             $data['id'],
             $data['name'],
-            $data['species'],
-            $data['breed'],
+            $data['species_id'],
+            $data['breed_id'],
             $data['gender'],
-            $data['life_stage'] ?? 'JOVEN ADULTO',
+            $data['life_stage'],
             $data['weight'],
             $data['client_id']
         ) : null;
@@ -38,7 +44,11 @@ class PetRepository implements PetRepositoryInterface
     {
         $offset = ($page - 1) * $perPage;
         $stmt = $this->connection->prepare(
-            "SELECT * FROM pets
+            "SELECT p.*, s.name as species_name, b.name as breed_name 
+             FROM pets p
+             JOIN species s ON p.species_id = s.id
+             LEFT JOIN breeds b ON p.breed_id = b.id
+             ORDER BY p.name
              LIMIT :limit OFFSET :offset"
         );
 
@@ -51,10 +61,10 @@ class PetRepository implements PetRepositoryInterface
             $pet = new Pet(
                 $data['id'],
                 $data['name'],
-                $data['species'],
-                $data['breed'],
+                $data['species_id'],
+                $data['breed_id'],
                 $data['gender'],
-                $data['life_stage'] ?? 'No especificada',
+                $data['life_stage'],
                 $data['weight'],
                 $data['client_id']
             );
@@ -73,14 +83,14 @@ class PetRepository implements PetRepositoryInterface
     public function save(Pet $pet): int
     {
         $stmt = $this->connection->prepare(
-            "INSERT INTO pets (name, species, breed, gender, life_stage, weight, client_id) 
-             VALUES (:name, :species, :breed, :gender, :life_stage, :weight, :client_id)"
+            "INSERT INTO pets (name, species_id, breed_id, gender, life_stage, weight, client_id) 
+             VALUES (:name, :species_id, :breed_id, :gender, :life_stage, :weight, :client_id)"
         );
 
         $stmt->execute([
             ':name' => $pet->getName(),
-            ':species' => $pet->getSpecies(),
-            ':breed' => $pet->getBreed(),
+            ':species_id' => $pet->getSpeciesId(),
+            ':breed_id' => $pet->getBreedId(),
             ':gender' => $pet->getGender(),
             ':life_stage' => $pet->getLifeStage(),
             ':weight' => $pet->getWeight(),
@@ -95,8 +105,8 @@ class PetRepository implements PetRepositoryInterface
         $stmt = $this->connection->prepare(
             "UPDATE pets SET 
                 name = :name,
-                species = :species,
-                breed = :breed,
+                species_id = :species_id,
+                breed_id = :breed_id,
                 gender = :gender,
                 life_stage = :life_stage,
                 weight = :weight,
@@ -107,8 +117,8 @@ class PetRepository implements PetRepositoryInterface
         return $stmt->execute([
             ':id' => $pet->getId(),
             ':name' => $pet->getName(),
-            ':species' => $pet->getSpecies(),
-            ':breed' => $pet->getBreed(),
+            ':species_id' => $pet->getSpeciesId(),
+            ':breed_id' => $pet->getBreedId(),
             ':gender' => $pet->getGender(),
             ':life_stage' => $pet->getLifeStage(),
             ':weight' => $pet->getWeight(),
@@ -118,6 +128,8 @@ class PetRepository implements PetRepositoryInterface
 
     public function delete(int $id): bool
     {
+        // Pendiente de verificar si hay relaciones con la mascota
+
         $stmt = $this->connection->prepare("DELETE FROM pets WHERE id = :id");
         return $stmt->execute([':id' => $id]);
     }
@@ -126,9 +138,12 @@ class PetRepository implements PetRepositoryInterface
     {
         $offset = ($page - 1) * $perPage;
         $stmt = $this->connection->prepare(
-            "SELECT * FROM pets 
-             WHERE name LIKE :query OR species LIKE :query OR breed LIKE :query
-             ORDER BY name
+            "SELECT p.*, s.name as species_name, b.name as breed_name 
+             FROM pets p
+             JOIN species s ON p.species_id = s.id
+             LEFT JOIN breeds b ON p.breed_id = b.id
+             WHERE p.name LIKE :query OR s.name LIKE :query OR b.name LIKE :query
+             ORDER BY p.name
              LIMIT :limit OFFSET :offset"
         );
 
@@ -143,8 +158,8 @@ class PetRepository implements PetRepositoryInterface
             $pets[] = new Pet(
                 $data['id'],
                 $data['name'],
-                $data['species'],
-                $data['breed'],
+                $data['species_id'],
+                $data['breed_id'],
                 $data['gender'],
                 $data['life_stage'],
                 $data['weight'],
@@ -158,8 +173,11 @@ class PetRepository implements PetRepositoryInterface
     public function countSearch(string $query): int
     {
         $stmt = $this->connection->prepare(
-            "SELECT COUNT(*) as total FROM pets 
-             WHERE name LIKE :query OR species LIKE :query OR breed LIKE :query"
+            "SELECT COUNT(*) as total 
+             FROM pets p
+             JOIN species s ON p.species_id = s.id
+             LEFT JOIN breeds b ON p.breed_id = b.id
+             WHERE p.name LIKE :query OR s.name LIKE :query OR b.name LIKE :query"
         );
 
         $searchQuery = "%$query%";
@@ -170,7 +188,12 @@ class PetRepository implements PetRepositoryInterface
     public function findByClientId(int $clientId): array
     {
         $stmt = $this->connection->prepare(
-            "SELECT * FROM pets WHERE client_id = :client_id ORDER BY name"
+            "SELECT p.*, s.name as species_name, b.name as breed_name 
+             FROM pets p
+             JOIN species s ON p.species_id = s.id
+             LEFT JOIN breeds b ON p.breed_id = b.id
+             WHERE p.client_id = :client_id
+             ORDER BY p.name"
         );
         $stmt->execute([':client_id' => $clientId]);
 
@@ -179,10 +202,10 @@ class PetRepository implements PetRepositoryInterface
             $pets[] = new Pet(
                 $data['id'],
                 $data['name'],
-                $data['species'],
-                $data['breed'],
+                $data['species_id'],
+                $data['breed_id'],
                 $data['gender'],
-                $data['life_stage'] ?? 'No especificada',
+                $data['life_stage'],
                 $data['weight'],
                 $data['client_id']
             );

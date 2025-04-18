@@ -19,19 +19,19 @@ $appointments = []; // remover prox
                     <div class="bg-blue-600 px-6 py-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <?php $petIcon = $pet->getSpecies() === 'Perro' ? 'fa-dog' : ($pet->getSpecies() === 'Gato' ? 'fa-cat' : 'fa-paw'); ?>
+                                <?php $petIcon = $pet['species_name'] === 'Perro' ? 'fa-dog' : ($pet['species_name'] === 'Gato' ? 'fa-cat' : 'fa-paw'); ?>
                                 <i class="fas <?= $petIcon ?> text-white text-2xl mr-3"></i>
-                                <h1 class="text-2xl font-bold text-white"><?= htmlspecialchars($pet->getName()) ?></h1>
+                                <h1 class="text-2xl font-bold text-white"><?= htmlspecialchars($pet['name']) ?></h1>
                             </div>
                             <div class="flex space-x-2">
-                                <a href="/pets/<?= $pet->getId() ?>/edit" class="text-white hover:text-blue-200">
+                                <a href="/pets/<?= $pet['id'] ?>/edit" class="text-white hover:text-blue-200">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Información de la mascota -->
+                    <!-- Informacion de la mascota -->
                     <div class="px-6 py-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-4">
@@ -40,23 +40,28 @@ $appointments = []; // remover prox
                                     <div class="space-y-2">
                                         <p class="flex items-center">
                                             <i class="fas fa-dna text-gray-500 mr-2 w-5"></i>
+                                            <span class="font-medium">Especie:</span>
+                                            <span class="ml-1"><?= htmlspecialchars($pet['species_name']) ?></span>
+                                        </p>
+                                        <p class="flex items-center">
+                                            <i class="fas fa-dna text-gray-500 mr-2 w-5"></i>
                                             <span class="font-medium">Raza:</span>
-                                            <span class="ml-1"><?= htmlspecialchars($pet->getBreed()) ?></span>
+                                            <span class="ml-1"><?= htmlspecialchars($pet['breed_name']) ?></span>
                                         </p>
                                         <p class="flex items-center">
                                             <i class="fas fa-venus-mars text-gray-500 mr-2 w-5"></i>
                                             <span class="font-medium">Género:</span>
-                                            <span class="ml-1"><?= htmlspecialchars($pet->getGender()) ?></span>
+                                            <span class="ml-1"><?= htmlspecialchars($pet['gender']) ?></span>
                                         </p>
                                         <p class="flex items-center">
                                             <i class="fas fa-hourglass-half text-gray-500 mr-2 w-5"></i>
                                             <span class="font-medium">Etapa de vida:</span>
-                                            <span class="ml-1"><?= htmlspecialchars($pet->getLifeStage()) ?></span>
+                                            <span class="ml-1"><?= htmlspecialchars($pet['life_stage']) ?></span>
                                         </p>
                                         <p class="flex items-center">
                                             <i class="fas fa-weight text-gray-500 mr-2 w-5"></i>
                                             <span class="font-medium">Peso:</span>
-                                            <span class="ml-1"><?= htmlspecialchars($pet->getWeight()) ?> kg</span>
+                                            <span class="ml-1"><?= htmlspecialchars($pet['weight']) ?> kg</span>
                                         </p>
                                     </div>
                                 </div>
@@ -65,7 +70,7 @@ $appointments = []; // remover prox
                             <div>
                                 <h2 class="text-lg font-semibold text-gray-700 mb-2">Dueño</h2>
                                 <div class="bg-gray-50 p-4 rounded-md">
-                                    <a href="/clients/<?= $pet->getClientId() ?>" class="text-blue-600 hover:text-blue-800 font-medium">
+                                    <a href="/clients/<?= $pet['client_id'] ?>" class="text-blue-600 hover:text-blue-800 font-medium">
                                         <i class="fas fa-user mr-1"></i> Ver información del dueño
                                     </a>
                                 </div>
@@ -96,7 +101,7 @@ $appointments = []; // remover prox
                         <?php else: ?>
                             <div class="bg-blue-50 p-3 rounded-md text-blue-800 text-sm">
                                 <i class="fas fa-info-circle mr-1"></i> No hay citas programadas para esta mascota.
-                                <a href="/appointments/create?pet_id=<?= $pet->getId() ?>" class="text-blue-600 hover:text-blue-800 font-medium ml-1">
+                                <a href="/appointments/create?pet_id=<?= $pet['id'] ?>" class="text-blue-600 hover:text-blue-800 font-medium ml-1">
                                     Agendar cita
                                 </a>
                             </div>
@@ -114,6 +119,7 @@ $appointments = []; // remover prox
     </main>
 </div>
 
+<script src="/js/global/scripts.js"></script>
+
 <?php
-include __DIR__ . '/../partials/scripts.php';
 include __DIR__ . '/../partials/footer.php';

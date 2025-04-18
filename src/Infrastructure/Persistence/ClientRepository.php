@@ -147,4 +147,19 @@ class ClientRepository implements ClientRepositoryInterface
         $stmt->execute([':query' => $searchQuery]);
         return (int)$stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
+
+    public function findByPetId(int $id): ?Client
+    {
+        $stmt = $this->connection->prepare("SELECT c.* FROM clients c JOIN pets p ON c.id = p.client_id WHERE p.id = :id");
+        $stmt->execute([':id' => $id]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $data ? new Client(
+            $data['id'],
+            $data['firstName'],
+            $data['lastName'],
+            $data['phone'],
+            $data['address']
+        ) : null;
+    }
 }

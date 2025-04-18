@@ -3,7 +3,6 @@ $title = 'Detalle de Cliente - Veterinaria';
 $pageTitle = 'Detalle de Cliente';
 include __DIR__ . '/../partials/header.php';
 include __DIR__ . '/../partials/sidebar.php';
-// $pets = []; // remover prox
 $appointments = []; // remover prox
 ?>
 
@@ -28,7 +27,7 @@ $appointments = []; // remover prox
                         </div>
                     </div>
 
-                    <!-- Información del cliente -->
+                    <!-- Informacion del cliente -->
                     <div class="px-6 py-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
@@ -46,7 +45,7 @@ $appointments = []; // remover prox
                                 </p>
                             </div>
 
-                            <!-- Sección de Mascotas Mejorada -->
+                            <!-- Seccion de Mascotas -->
                             <div class="bg-gray-50 p-4 rounded-lg">
                                 <div class="flex justify-between items-center mb-3">
                                     <h2 class="text-lg font-semibold text-gray-700">
@@ -64,27 +63,27 @@ $appointments = []; // remover prox
                                             <div class="bg-white p-3 rounded-md shadow-sm hover:shadow-md transition-shadow">
                                                 <div class="flex justify-between items-start">
                                                     <div>
-                                                        <a href="/pets/<?= $pet->getId() ?>" class="font-medium text-blue-600 hover:text-blue-800 flex items-center">
+                                                        <a href="/pets/<?= $pet['id'] ?>" class="font-medium text-blue-600 hover:text-blue-800 flex items-center">
                                                             <?php
-                                                            $icon = match ($pet->getSpecies()) {
+                                                            $icon = match ($pet['species_name']) {
                                                                 'Perro' => 'fa-dog',
                                                                 'Gato' => 'fa-cat',
                                                                 default => 'fa-paw'
                                                             };
                                                             ?>
                                                             <i class="fas <?= $icon ?> mr-2 text-gray-400"></i>
-                                                            <?= htmlspecialchars($pet->getName()) . ' - ' . htmlspecialchars($pet->getSpecies()) ?>
+                                                            <?= htmlspecialchars($pet['name']) . ' - ' . htmlspecialchars($pet['species_name']) ?>
                                                         </a>
                                                         <div class="text-sm text-gray-600 mt-1">
                                                             <span class="inline-block bg-gray-100 rounded-full px-2 py-0.5 mr-2">
-                                                                <?= htmlspecialchars($pet->getBreed()) ?>
+                                                                <?= htmlspecialchars($pet['breed_name']) ?>
                                                             </span>
                                                             <span class="inline-block bg-gray-100 rounded-full px-2 py-0.5">
-                                                                <?= htmlspecialchars($pet->getLifeStage()) ?>
+                                                                <?= htmlspecialchars($pet['life_stage']) ?>
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <a href="/pets/<?= $pet->getId() ?>/edit"
+                                                    <a href="/pets/<?= $pet['id'] ?>/edit"
                                                         class="text-gray-400 hover:text-gray-600 ml-2"
                                                         title="Editar mascota">
                                                         <i class="fas fa-edit"></i>
@@ -135,7 +134,8 @@ $appointments = []; // remover prox
     </main>
 </div>
 
+<script src="/js/global/scripts.js"></script>
+
 <?php
-include __DIR__ . '/../partials/scripts.php';
 include __DIR__ . '/../partials/footer.php';
 ?>

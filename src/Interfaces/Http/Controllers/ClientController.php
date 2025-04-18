@@ -41,7 +41,7 @@ class ClientController
 
         // Obtener las mascotas del cliente
         $petsData = $this->petUseCase->getPetsByClient($client->getId());
-        $pets = $petsData['pets'];
+        $pets = $petsData['data'];
         
         include __DIR__ . '/../../../../public/views/clients/show.php';
     }

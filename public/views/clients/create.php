@@ -14,9 +14,11 @@ include __DIR__ . '/../partials/sidebar.php';
         <div class="flex justify-center items-center min-h-full">
             <div class="w-full max-w-md">
                 <div class="bg-white p-8 rounded-lg shadow-md">
-                <div class="text-center mb-6">
+                    <!-- Imagen -->
+                    <div class="text-center mb-6">
                         <img src="/img/client.png" alt="Client" class="mx-auto w-32 h-32">
                     </div>
+                    <!-- Titulo del card -->
                     <h1 class="text-2xl font-bold text-center mb-6">Registrar Nuevo Cliente</h1>
 
                     <form action="/clients" method="POST" class="space-y-6">
@@ -69,6 +71,7 @@ include __DIR__ . '/../partials/sidebar.php';
     </main>
 </div>
 
+<script src="/js/global/scripts.js"></script>
+
 <?php
-include __DIR__ . '/../partials/scripts.php';
 include __DIR__ . '/../partials/footer.php';

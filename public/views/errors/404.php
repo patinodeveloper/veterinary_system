@@ -21,7 +21,8 @@ include __DIR__ . '/../partials/sidebar.php';
     </main>
 </div>
 
+<script src="/js/global/scripts.js"></script>
+
 <?php
-include __DIR__ . '/../partials/scripts.php';
 include __DIR__ . '/../partials/footer.php';
 ?>

@@ -27,7 +27,6 @@ include __DIR__ . '/../partials/sidebar.php';
                     </button>
                 </div>
             </form>
-
             <!-- Lista de mascotas -->
             <div class="bg-white shadow rounded-lg overflow-hidden">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -46,39 +45,39 @@ include __DIR__ . '/../partials/sidebar.php';
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-10 w-10">
-                                            <?php $petIcon = $pet->getSpecies() === 'Perro' ? 'fa-dog' : ($pet->getSpecies() === 'Gato' ? 'fa-cat' : 'fa-paw'); ?>
+                                            <?php $petIcon = $pet['species'] === 'Perro' ? 'fa-dog' : ($pet['species'] === 'Gato' ? 'fa-cat' : 'fa-paw'); ?>
                                             <i class="fas <?= $petIcon ?> text-gray-400 text-xl"></i>
                                         </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900">
-                                                <?= htmlspecialchars($pet->getName()) ?>
+                                                <?= htmlspecialchars($pet['name']) ?>
                                             </div>
                                             <div class="text-sm text-gray-500">
-                                                <?= htmlspecialchars($pet->getGender()) ?> - <?= htmlspecialchars($pet->getLifeStage()) ?>
+                                                <?= htmlspecialchars($pet['gender']) ?> - <?= htmlspecialchars($pet['life_stage']) ?>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?= htmlspecialchars($pet->getSpecies()) ?>
+                                    <?= htmlspecialchars($pet['species_name']) ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <?= htmlspecialchars($pet->getBreed()) ?>
+                                    <?= htmlspecialchars($pet['breed_name']) ?>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    <a href="/clients/<?= $pet->getClientId() ?>" class="text-blue-600 hover:text-blue-900">
+                                    <a href="/clients/<?= $pet['client_id'] ?>" class="text-blue-600 hover:text-blue-900">
                                         Ver dueño
                                     </a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex space-x-3">
-                                        <a href="/pets/<?= $pet->getId() ?>" class="text-blue-600 hover:text-blue-900" title="Ver">
+                                        <a href="/pets/<?= $pet['id'] ?>" class="text-blue-600 hover:text-blue-900" title="Ver">
                                             <i class="fas fa-eye text-base"></i>
                                         </a>
-                                        <a href="/pets/<?= $pet->getId() ?>/edit" class="text-green-600 hover:text-green-900" title="Editar">
+                                        <a href="/pets/<?= $pet['id'] ?>/edit" class="text-green-600 hover:text-green-900" title="Editar">
                                             <i class="fas fa-edit text-base"></i>
                                         </a>
-                                        <form action="/pets/<?= $pet->getId() ?>/delete" method="POST" class="inline">
+                                        <form action="/pets/<?= $pet['id'] ?>/delete" method="POST" class="inline">
                                             <input type="hidden" name="_method" value="DELETE">
                                             <button type="submit" class="text-red-600 hover:text-red-900" title="Eliminar"
                                                 onclick="return confirm('¿Eliminar esta mascota?')">
@@ -93,7 +92,7 @@ include __DIR__ . '/../partials/sidebar.php';
                 </table>
             </div>
             <!-- Paginación -->
-            <?php if ($totalPages > 1): ?>
+            <?php if ($totalPages >= 1): ?>
                 <div class="mt-6 flex items-center justify-between">
                     <div class="text-sm text-gray-500">
                         Mostrando página <?= $currentPage ?> de <?= $totalPages ?>
@@ -147,6 +146,7 @@ include __DIR__ . '/../partials/sidebar.php';
     </main>
 </div>
 
+<script src="/js/global/scripts.js"></script>
+
 <?php
-include __DIR__ . '/../partials/scripts.php';
 include __DIR__ . '/../partials/footer.php';

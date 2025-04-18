@@ -4,34 +4,17 @@ namespace VetApp\Domain\Entities;
 
 class Pet
 {
-    private int $id;
-    private string $name;
-    private string $species;
-    private string $breed;
-    private string $gender;
-    private string $life_stage;
-    private string $weight;
-    private int $client_id;
 
     public function __construct(
-        int $id,
-        string $name,
-        string $species,
-        string $breed,
-        string $gender,
-        string $life_stage,
-        string $weight,
-        int $client_id
-    ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->species = $species;
-        $this->breed = $breed;
-        $this->gender = $gender;
-        $this->life_stage = $life_stage;
-        $this->weight = $weight;
-        $this->client_id = $client_id;
-    }
+        private int $id,
+        private string $name,
+        private int $species_id,
+        private ?int $breed_id,
+        private string $gender,
+        private string $life_stage,
+        private float $weight,
+        private int $client_id
+    ) {}
 
     // Getters
     public function getId(): int
@@ -44,14 +27,14 @@ class Pet
         return $this->name;
     }
 
-    public function getSpecies(): string
+    public function getSpeciesId(): int
     {
-        return $this->species;
+        return $this->species_id;
     }
 
-    public function getBreed(): string
+    public function getBreedId(): ?int
     {
-        return $this->breed;
+        return $this->breed_id;
     }
 
     public function getGender(): string
@@ -64,7 +47,7 @@ class Pet
         return $this->life_stage;
     }
 
-    public function getWeight(): string
+    public function getWeight(): float
     {
         return $this->weight;
     }
@@ -80,14 +63,14 @@ class Pet
         $this->name = $name;
     }
 
-    public function setSpecies(string $species): void
+    public function setSpeciesId(int $species_id): void
     {
-        $this->species = $species;
+        $this->species_id = $species_id;
     }
 
-    public function setBreed(string $breed): void
+    public function setBreedId(?int $breed_id): void
     {
-        $this->breed = $breed;
+        $this->breed_id = $breed_id;
     }
 
     public function setGender(string $gender): void
@@ -100,7 +83,7 @@ class Pet
         $this->life_stage = $life_stage;
     }
 
-    public function setWeight(string $weight): void
+    public function setWeight(float $weight): void
     {
         $this->weight = $weight;
     }

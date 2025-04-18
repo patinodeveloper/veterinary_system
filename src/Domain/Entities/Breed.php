@@ -8,7 +8,6 @@ class Breed
         private int $id,
         private string $name,
         private int $species_id,
-        private bool $is_default
     ) {}
 
     // Getters
@@ -41,15 +40,5 @@ class Breed
     public function setSpeciesId(int $species_id): void
     {
         $this->species_id = $species_id;
-    }
-
-    public function isDefault(): bool
-    {
-        return $this->is_default;
-    }
-
-    public function setIsDefault(bool $is_default): void
-    {
-        $this->is_default = $is_default;
     }
 }
