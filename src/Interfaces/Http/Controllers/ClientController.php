@@ -4,16 +4,19 @@ namespace VetApp\Interfaces\Http\Controllers;
 
 use VetApp\Application\Client\ManageClientUseCase;
 use VetApp\Application\Pet\ManagePetUseCase;
+use VetApp\Core\FlashMessages;
 
 class ClientController
 {
     private ManageClientUseCase $clientUseCase;
     private ManagePetUseCase $petUseCase;
+    private FlashMessages $flash;
 
     public function __construct(ManageClientUseCase $clientUseCase, ManagePetUseCase $petUseCase)
     {
         $this->clientUseCase = $clientUseCase;
         $this->petUseCase = $petUseCase;
+        $this->flash = new FlashMessages();
     }
 
     public function index()
@@ -42,7 +45,7 @@ class ClientController
         // Obtener las mascotas del cliente
         $petsData = $this->petUseCase->getPetsByClient($client->getId());
         $pets = $petsData['data'];
-        
+
         include __DIR__ . '/../../../../public/views/clients/show.php';
     }
 
@@ -58,15 +61,22 @@ class ClientController
             exit;
         }
 
-        $id = $this->clientUseCase->createClient(
-            $_POST['firstName'],
-            $_POST['lastName'],
-            $_POST['phone'],
-            $_POST['address']
-        );
+        try {
+            $id = $this->clientUseCase->createClient(
+                $_POST['firstName'],
+                $_POST['lastName'],
+                $_POST['phone'],
+                $_POST['address']
+            );
 
-        header("Location: /clients/$id");
-        exit;
+            $this->flash->success('Cliente registrado exitosamente', "/clients/$id");
+            header("Location: /clients/$id");
+            exit;
+        } catch (\Exception $e) {
+            $this->flash->error('Error al registrar el cliente: ' . $e->getMessage(), '/clients/create');
+            header("Location: /clients/create");
+            exit;
+        }
     }
 
     public function edit(int $id)
@@ -87,20 +97,28 @@ class ClientController
             exit;
         }
 
-        $success = $this->clientUseCase->updateClient(
-            $id,
-            $_POST['firstName'],
-            $_POST['lastName'],
-            $_POST['phone'],
-            $_POST['address']
-        );
+        try {
+            $success = $this->clientUseCase->updateClient(
+                $id,
+                $_POST['firstName'],
+                $_POST['lastName'],
+                $_POST['phone'],
+                $_POST['address']
+            );
 
-        if ($success) {
-            header("Location: /clients/$id");
-        } else {
-            header("Location: /clients/$id/edit?error=1");
+            if ($success) {
+                $this->flash->success('Cliente actualizado exitosamente', "/clients/$id");
+                header("Location: /clients/$id");
+            } else {
+                $this->flash->error('No se pudo actualizar el cliente', "/clients/$id/edit");
+                header("Location: /clients/$id/edit");
+            }
+            exit;
+        } catch (\Exception $e) {
+            $this->flash->error('Error al actualizar el cliente: ' . $e->getMessage(), "/clients/$id/edit");
+            header("Location: /clients/$id/edit");
+            exit;
         }
-        exit;
     }
 
     public function delete(int $id)
@@ -110,14 +128,22 @@ class ClientController
             exit;
         }
 
-        $success = $this->clientUseCase->deleteClient($id);
+        try {
+            $success = $this->clientUseCase->deleteClient($id);
 
-        if ($success) {
-            header("Location: /clients");
-        } else {
-            header("Location: /clients/$id?error=1");
+            if ($success) {
+                $this->flash->success('Cliente eliminado exitosamente', '/clients');
+                header("Location: /clients");
+            } else {
+                $this->flash->error('No se pudo eliminar el cliente', "/clients/$id");
+                header("Location: /clients/$id");
+            }
+            exit;
+        } catch (\Exception $e) {
+            $this->flash->error('Error al eliminar el cliente: ' . $e->getMessage(), "/clients/$id");
+            header("Location: /clients/$id");
+            exit;
         }
-        exit;
     }
 
     public function search()

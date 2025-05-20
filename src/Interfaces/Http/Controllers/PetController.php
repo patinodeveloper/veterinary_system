@@ -7,6 +7,7 @@ use VetApp\Infrastructure\Persistence\ClientRepository;
 use VetApp\Application\Species\ManageSpeciesUseCase;
 use VetApp\Application\Breed\ManageBreedUseCase;
 use VetApp\Application\Client\ManageClientUseCase;
+use VetApp\Core\FlashMessages;
 
 class PetController
 {
@@ -14,17 +15,19 @@ class PetController
     private ManageSpeciesUseCase $speciesUseCase;
     private ManageBreedUseCase $breedUseCase;
     private ManageClientUseCase $clientUseCase;
+    private FlashMessages $flash;
 
     public function __construct(
         ManagePetUseCase $petUseCase,
         ManageSpeciesUseCase $speciesUseCase,
         ManageBreedUseCase $breedUseCase,
-        ManageClientUseCase $clientUseCase
+        ManageClientUseCase $clientUseCase,
     ) {
         $this->petUseCase = $petUseCase;
         $this->speciesUseCase = $speciesUseCase;
         $this->breedUseCase = $breedUseCase;
         $this->clientUseCase = $clientUseCase;
+        $this->flash = new FlashMessages();
     }
 
     public function index()
@@ -102,10 +105,15 @@ class PetController
                 (int)$_POST['client_id']
             );
 
+            $this->flash->success('Mascota registrada exitosamente', "/pets/$id");
             header("Location: /pets/$id");
         } catch (\Exception $e) {
-            // Redirigir de vuelta al formulario con un mensaje de error
-            header("Location: /pets/create?error=" . urlencode($e->getMessage()));
+            $clientId = isset($_POST['client_id']) ? (int)$_POST['client_id'] : null;
+            $redirectUrl = $clientId ? "/pets/create?client_id=$clientId" : "/pets/create";
+
+            $this->flash->error('Error al registrar la mascota: ' . $e->getMessage(), $redirectUrl);
+            header("Location: $redirectUrl");
+            exit;
         }
         exit;
     }
@@ -160,13 +168,17 @@ class PetController
             );
 
             if ($success) {
+                $this->flash->success('Mascota actualizada exitosamente', "/pets/$id");
                 header("Location: /pets/$id");
             } else {
-                header("Location: /pets/$id/edit?error=1");
+                $this->flash->error('No se pudo actualizar la mascota', "/pets/$id/edit");
+                header("Location: /pets/$id/edit");
             }
+            exit;
         } catch (\Exception $e) {
-            // Redirigir de vuelta al formulario con un mensaje de error
-            header("Location: /pets/$id/edit?error=" . urlencode($e->getMessage()));
+            $this->flash->error('Error al actualizar la mascota: ' . $e->getMessage(), "/pets/$id/edit");
+            header("Location: /pets/$id/edit");
+            exit;
         }
         exit;
     }
@@ -177,15 +189,22 @@ class PetController
             header("HTTP/1.0 405 Method Not Allowed");
             exit;
         }
+        try {
+            $success = $this->petUseCase->deletePet($id);
 
-        $success = $this->petUseCase->deletePet($id);
-
-        if ($success) {
-            header("Location: /pets");
-        } else {
-            header("Location: /pets/$id?error=1");
+            if ($success) {
+                $this->flash->success('Mascota eliminada exitosamente', "/pets");
+                header("Location: /pets");
+            } else {
+                $this->flash->error('No se pudo eliminar la mascota', "/pets/$id");
+                header("Location: /pets/$id");
+            }
+            exit;
+        } catch (\Exception $e) {
+            $this->flash->error('Error al eliminar la mascota: ' . $e->getMessage(), "/pets/$id");
+            header("Location: /pets/$id");
+            exit;
         }
-        exit;
     }
 
     public function search()

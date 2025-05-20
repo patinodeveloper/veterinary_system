@@ -147,6 +147,6 @@ include __DIR__ . '/../partials/sidebar.php';
 </div>
 
 <script src="/js/global/scripts.js"></script>
-
+<script src="/js/global/delete_swal.js"></script>
 <?php
 include __DIR__ . '/../partials/footer.php';

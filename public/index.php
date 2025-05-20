@@ -8,6 +8,7 @@ use VetApp\Application\Breed\ManageBreedUseCase;
 use VetApp\Application\Client\ManageClientUseCase;
 use VetApp\Application\Pet\ManagePetUseCase;
 use VetApp\Application\Species\ManageSpeciesUseCase;
+use VetApp\Core\FlashMessages;
 use VetApp\Domain\Services\AuthService;
 use VetApp\Infrastructure\Persistence\UserRepository;
 use VetApp\Infrastructure\Auth\SessionAuth;
@@ -19,6 +20,15 @@ use VetApp\Interfaces\Http\Controllers\BreedController;
 use VetApp\Interfaces\Http\Controllers\ClientController;
 use VetApp\Interfaces\Http\Controllers\PetController;
 use VetApp\Interfaces\Http\Controllers\SpeciesController;
+
+
+// Iniciar sesion para los mensajes flash si no esta iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Instancia de FlashMessages para mensajes flash
+$flashMessages = new FlashMessages();
 
 // Instancias de las clases necesarias
 $userRepository = new UserRepository();

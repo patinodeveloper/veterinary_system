@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../src/Interfaces/Http/Middleware/AuthMiddleware.php';
 
+use VetApp\Core\FlashMessages;
 use VetApp\Infrastructure\Auth\SessionAuth;
 use VetApp\Interfaces\Http\Middleware\AuthMiddleware;
 
@@ -36,6 +37,10 @@ $menuItems = [
 
 $currentRole = $user['role'];
 $currentMenu = $menuItems[$currentRole] ?? $menuItems['assistant'];
+
+// Inicializar flashMessages
+$flashMessages = new FlashMessages();
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -46,6 +51,12 @@ $currentMenu = $menuItems[$currentRole] ?? $menuItems['assistant'];
     <title><?= $title ?? 'VetApp - Sistema Veterinario' ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+
     <style>
         /* Estilos para la sidebar */
         #sidebar {
@@ -92,6 +103,11 @@ $currentMenu = $menuItems[$currentRole] ?? $menuItems['assistant'];
             }
         }
     </style>
+
+    <script>
+        // Variables globales para los mensajes flash
+        window.flashMessages = <?= $flashMessages->toJson() ?>;
+    </script>
 </head>
 
 <body class="bg-gray-100">
